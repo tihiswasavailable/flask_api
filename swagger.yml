@@ -1,0 +1,214 @@
+openapi: 3.0.0
+info:
+  title: "Flask RestAPI"
+  description: "An API demo about people"
+  version: "1.0.0"
+
+servers:
+  - url: "/api"
+
+components:
+  schemas:
+    Person:
+      type: object
+      required:
+        - lname
+      properties:
+        fname:
+          type: string
+        lname:
+          type: string
+
+paths:
+  /people:
+    get:
+      operationId: "people.read_all"
+      tags:
+        - "People"
+      summary: "Read the list of people"
+      responses:
+        '200':
+          description: "Successfully read people list"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Person"
+    post:
+      operationId: "people.create"
+      tags:
+        - "People"
+      summary: "Create a new person"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Person"
+      responses:
+        '201':
+          description: "Successfully created person"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Person"
+
+  /people/{id}:
+    get:
+      operationId: "people.read_by_id"
+      tags:
+        - "People"
+      summary: "Read person by ID"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: "ID of the person"
+      responses:
+        '200':
+          description: "Successfully retrieved person by ID"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Person"
+        '404':
+          description: "Person not found"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Person with ID = {id} not found"
+
+    put:
+      operationId: "people.update"
+      tags:
+        - "People"
+      summary: "Update a person by ID"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: "ID of the person to update"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Person"
+      responses:
+        '200':
+          description: "Successfully updated person"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Person"
+        '404':
+          description: "Person not found"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Person with ID = {id} not found"
+
+    delete:
+      operationId: "people.delete"
+      tags:
+        - "People"
+      summary: "Delete a person by ID"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: "ID of the person to delete"
+      responses:
+        '204':
+          description: "Person deleted successfully"
+        '404':
+          description: "Person not found"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Person with ID = {id} not found"
+
+  /people/byfname/{fname}:
+    get:
+      operationId: "people.read_by_fname"
+      tags:
+        - "People"
+      summary: "Read person by first name"
+      parameters:
+        - name: fname
+          in: path
+          required: true
+          schema:
+            type: string
+          description: "First name of the person"
+      responses:
+        '200':
+          description: "Successfully retrieved person by first name"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Person"
+        '404':
+          description: "Person not found"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Person with first name = {fname} not found"
+
+  /people/bylname/{lname}:
+    get:
+      operationId: "people.read_by_lname"
+      tags:
+        - "People"
+      summary: "Read person by last name"
+      parameters:
+        - name: lname
+          in: path
+          required: true
+          schema:
+            type: string
+          description: "Last name of the person"
+      responses:
+        '200':
+          description: "Successfully retrieved person by last name"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Person"
+        '404':
+          description: "Person not found"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Person with last name = {lname} not found"
